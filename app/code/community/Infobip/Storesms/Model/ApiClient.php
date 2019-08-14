@@ -14,7 +14,10 @@
  */
 class Infobip_Storesms_Model_ApiClient {
 
-  
+    const CONTENT_TYPE_HEADER = 'Content-Type:application/xml';
+    const ACCEPT_HEADER = 'Accept:application/xml';
+    const USER_AGENT_HEADER = 'User-Agent:Magento-';
+
     public function sendByCurl(array $smsData) {
         
         if (empty($smsData['recipients']))
@@ -46,10 +49,11 @@ class Infobip_Storesms_Model_ApiClient {
         $fields = "XML=" . urlencode($xmlString);
         
         $ch = curl_init();
-        $header = array('Content-Type:application/xml', 'Accept:application/xml');
+        $headers = array(self::CONTENT_TYPE_HEADER, self::ACCEPT_HEADER,
+            self::USER_AGENT_HEADER . Infobip_Storesms_Model_Config::PLUGIN_VERSION);
 
         curl_setopt($ch, CURLOPT_URL, $postUrl);
-        curl_setopt($ch, CURLOPT_HTTPHEADER , $header);
+        curl_setopt($ch, CURLOPT_HTTPHEADER , $headers);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,2);
@@ -71,18 +75,15 @@ class Infobip_Storesms_Model_ApiClient {
         curl_close($ch);
         return $responseArray;
     }
-    
-    
-    
-    
-    
+
     public function getCredits() {
 
         $config =  Mage::getModel('storesms/config');
         $getUrl = 'http://api.infobip.com//account/1/balance';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $getUrl);
-        curl_setopt($ch, CURLOPT_HTTPHEADER , array('Accept:application/xml'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER , array(self::ACCEPT_HEADER,
+            self::USER_AGENT_HEADER . Infobip_Storesms_Model_Config::PLUGIN_VERSION));
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
         curl_setopt($ch, CURLOPT_HTTPGET , TRUE);
@@ -101,10 +102,6 @@ class Infobip_Storesms_Model_ApiClient {
         
     }
     
-    
-    
-    
-    
     public function checkCreditLimit() {
 
         if (!Mage::getSingleton('admin/session')->isLoggedIn()) //checks credit limit only for logged admin
@@ -115,10 +112,8 @@ class Infobip_Storesms_Model_ApiClient {
             
         $limit = $config->creditAllertLimit();
         if ($limit==0) return; //If limit allert is turned off
-        
-        
+
         try {
-            
             $creditsArray = $this->getCredits();
             $responseBodyXml = $creditsArray["responseBodyXml"];
             $httpStatusCode = $creditsArray["httpStatusCode"];
@@ -139,9 +134,7 @@ class Infobip_Storesms_Model_ApiClient {
         }
         
     }
-    
-    
-    
+
     public function getMessageLogs() {
         
         $config =  Mage::getModel('storesms/config');
@@ -149,7 +142,8 @@ class Infobip_Storesms_Model_ApiClient {
         $getUrl = 'http://api.infobip.com/sms/1/logs?limit='.$limit;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $getUrl);
-        curl_setopt($curl, CURLOPT_HTTPHEADER , array('Accept:application/xml'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER , array(self::ACCEPT_HEADER,
+            self::USER_AGENT_HEADER . Infobip_Storesms_Model_Config::PLUGIN_VERSION));
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
         curl_setopt($curl, CURLOPT_HTTPGET , TRUE);

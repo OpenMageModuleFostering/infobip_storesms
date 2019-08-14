@@ -9,7 +9,7 @@ class Infobip_Storesms_Helper_Data extends Mage_Core_Helper_Abstract
 
         $config = Mage::getModel('storesms/config');
         $prefix = $config->getCountryPrefix();
-        $toStrip = '+,0()';
+        $toStrip = '+,0() ';
 
         if ($prefix) {
             $pos = strpos($phoneNumber, $prefix);

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Infobip_Storesms</name>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <stability>stable</stability>
     <license>Infobip StoreSMS licence</license>
     <channel>community</channel>
@@ -68,11 +68,11 @@
                         </dir>
                     </dir>
                     <dir name="Helper">
-                        <file name="Data.php" hash="004a36f801bde90fe9c10d7fcc49e0cf"/>
+                        <file name="Data.php" hash="df9fa6520991a97d535e9c30589dbdf5"/>
                     </dir>
                     <dir name="Model">
-                        <file name="ApiClient.php" hash="1fdd7b2aa0cfdcdb5b44a52d269fe645"/>
-                        <file name="Config.php" hash="ee2f15bd0e7b9a2cf400b926b0e9ffaa"/>
+                        <file name="ApiClient.php" hash="250bc9431c2e066f9eb00fbf697f3f71"/>
+                        <file name="Config.php" hash="f3b30ce19470650417fedef1dcfe7003"/>
                         <file name="Observer.php" hash="349cb0e104daee12d14175c1c9072eeb"/>
                         <file name="Storesms.php" hash="70f8c280a744eb613cacabc65ddf2365"/>
                     </dir>
@@ -82,7 +82,7 @@
                         </dir>
                     </dir>
                     <dir name="etc">
-                        <file name="config.xml" hash="8e03f00ace819c36402311e36edb424f"/>
+                        <file name="config.xml" hash="81f91c0cf544afd1d2a741ce04c6dc0f"/>
                         <file name="system.xml" hash="306dea3d0a32e1f961d753195f64e820"/>
                     </dir>
                 </dir>
@@ -139,11 +139,6 @@
                 <dir name="infobipStoresms">
                     <file name="storesmscounter.js" hash="172592c438b41b35d5b3bec9ad8afc0d"/>
                 </dir>
-            </dir>
-        </target>
-        <target name="magelocale">
-            <dir name="pl_PL">
-                <file name="Infobip_Storesms.csv" hash="00700b577d39d3c4f9e0553301cdead7"/>
             </dir>
         </target>
     </contents>

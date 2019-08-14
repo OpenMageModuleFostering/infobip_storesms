@@ -20,6 +20,7 @@ class Infobip_Storesms_Model_Config {
     const API_HOST = 'api.infobip.com';
     const WRONG_AUTH_DATA = 'Storesms API: Wrong Password and/or Username' ;
     const DR_LIMIT = 7654;
+    const PLUGIN_VERSION = "2.0.2";
     
     public $contacts = array (
         'en_US'=>'http://www.infobip.com/contact', //default international
