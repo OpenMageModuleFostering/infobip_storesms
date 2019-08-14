@@ -5,9 +5,11 @@ class Infobip_Storesms_Adminhtml_StoresmsController extends Mage_Adminhtml_Contr
  
     public function indexAction() {
         $this->loadLayout()
-             ->_setActiveMenu('storesms/items');
-        $this->renderLayout();
-        
+            ->_addContent(
+                $this->getLayout()
+                    ->createBlock('storesms/adminhtml_adminblock')
+                    ->setTemplate('storesms/Adminblock.phtml'))
+            ->renderLayout();
     }
 
     

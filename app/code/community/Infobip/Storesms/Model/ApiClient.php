@@ -21,56 +21,55 @@ class Infobip_Storesms_Model_ApiClient {
             throw new Exception(Mage::helper('storesms')->__('No recipients found'));
         
         $config = Mage::getModel('storesms/config');
-        $postUrl = "http://api2.infobip.com/api/sendsms/xml";
+        $postUrl = "http://api.infobip.com/sms/1/text/single";
         
         // XML-formatted data
-        
-        $xmlLongSms = ($config->isSingle()==1) ? '':'<type>longSMS</type>';
-	$dataCoding = ($config->isUnicode()==1) ? '0':'8';
-        $sender = $config->getSender();
-        $xmlSender  = ($config->isPro() && !empty($sender)) ? '<sender>'.$config->getSender().'</sender>':'';    
 
-        $xmlRecipients  = '<recipients>'."\r\n";
+        $sender = $config->getSender();
+        $xmlSender  = ($config->isPro() && !empty($sender)) ? $sender:'';
+        $xmlRecipients = '';
+
         foreach ($smsData['recipients'] as $recipient) {
-            $messageId = ($smsData['ids'][$recipient]) ? ' messageId="'.$smsData['ids'][$recipient].'"':'';
-            $xmlRecipients .= '<gsm'.$messageId.'>'.$recipient.'</gsm>'."\r\n";
+            $xmlRecipients .= '<to>';
+            $xmlRecipients .= $recipient;
+            $xmlRecipients .= '</to>'."\r\n";
         }
-        $xmlRecipients .= '</recipients>'."\r\n";
-        
+
         $xmlString =
-'<SMS>
-<authentification>
-<username>'.$config->getLogin().'</username>
-<password>'.$config->getPassword().'</password>
-</authentification>
-<message>
-'.$xmlSender.'
-'.$xmlLongSms.'
+'<request>
+<from>'.$xmlSender.'</from>
+<to>'.$xmlRecipients.'</to>
 <text>'.$smsData['message'].'</text>
-<datacoding>'.$dataCoding.'</datacoding>
-</message>
-'.$xmlRecipients.'
-</SMS>';
+</request>';
 
         // previously formatted XML data becomes value of "XML" POST variable
         $fields = "XML=" . urlencode($xmlString);
         
         $ch = curl_init();
+        $header = array('Content-Type:application/xml', 'Accept:application/xml');
 
         curl_setopt($ch, CURLOPT_URL, $postUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER , $header);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION,TRUE);
         curl_setopt($ch, CURLOPT_MAXREDIRS,2);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlString);
 
 
         // response of the POST request
         $response = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $responseBodyXml = new SimpleXMLElement($response);
+        $responseArray = array(
+            "httpStatusCode" => $httpcode,
+            "responseBodyXml" => $responseBodyXml
+        );
         curl_close($ch);
-        return $response;        
+        return $responseArray;
     }
     
     
@@ -78,15 +77,26 @@ class Infobip_Storesms_Model_ApiClient {
     
     
     public function getCredits() {
-        
-        $getUrl = 'http://api.infobip.com/api/command?username='.Mage::getModel('storesms/config')->getLogin().'&password='.Mage::getModel('storesms/config')->getPassword().'&cmd=CREDITS';
+
+        $config =  Mage::getModel('storesms/config');
+        $getUrl = 'http://api.infobip.com//account/1/balance';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $getUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER , array('Accept:application/xml'));
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
+        curl_setopt($ch, CURLOPT_HTTPGET , TRUE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         
         $response = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $responseBodyXml = new SimpleXMLElement($response);
+        $responseArray = array(
+            "httpStatusCode" => $httpcode,
+            "responseBodyXml" => $responseBodyXml
+        );
         curl_close($ch);
-        return $response;
+        return $responseArray;
         
         
     }
@@ -109,13 +119,18 @@ class Infobip_Storesms_Model_ApiClient {
         
         try {
             
-            $credits = $this->getCredits();
+            $creditsArray = $this->getCredits();
+            $responseBodyXml = $creditsArray["responseBodyXml"];
+            $httpStatusCode = $creditsArray["httpStatusCode"];
             
-            if ($credits=='UNKNOWN_COMMAND') {
+            if ($httpStatusCode==401) {
                 Mage::getSingleton('core/session')->addError(Mage::helper('storesms')->__($config::WRONG_AUTH_DATA));
             }
-            elseif($credits < $limit) {
-                Mage::getSingleton('core/session')->addError(Mage::helper('storesms')->__($config::LOW_CREDITS_WARNING_MESSAGE));
+            elseif($httpStatusCode==200) {
+                $balance = $responseBodyXml -> balance;
+                if ($balance < $limit) {
+                    Mage::getSingleton('core/session')->addError(Mage::helper('storesms')->__($config::LOW_CREDITS_WARNING_MESSAGE));
+                }
             }
 
         }
@@ -127,41 +142,33 @@ class Infobip_Storesms_Model_ApiClient {
     
     
     
-    public function getDelieveryReport() {
+    public function getMessageLogs() {
         
         $config =  Mage::getModel('storesms/config');
-        $getUrl = 'http://api2.infobip.com/api/dlrpull?user='.$config->getLogin().'&password='.$config->getPassword();
+        $limit = $config::DR_LIMIT;
+        $getUrl = 'http://api.infobip.com/sms/1/logs?limit='.$limit;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $getUrl);
+        curl_setopt($curl, CURLOPT_HTTPHEADER , array('Accept:application/xml'));
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD , $config->getLogin() . ":" . $config->getPassword());
+        curl_setopt($curl, CURLOPT_HTTPGET , TRUE);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
         $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $responseBodyXml = new SimpleXMLElement($response);
+        $responseArray = array(
+            "httpStatusCode" => $httpcode,
+            "responseBodyXml" => $responseBodyXml
+        );
         curl_close($curl);
-        return $response;
+        return $responseArray;
         
     }
 
 
-    
-    public function saveDelieveryReport($report = false) {
-        
-        if ($report === false)
-            $report = $this->getDelieveryReport ();
-        
-        if ($report == 'NO_DATA' || !$report)
-            return;
-        
-        //if delievery report exists save it to db
-        $delieveryStatuses = Mage::helper('storesms/xml')->getStatusesFromXml($report);
-        $model = Mage::getModel('storesms/storesms');
-        
-        //save delievery status for each message
-        foreach ($delieveryStatuses as $message) {
-            $model->setNewDeliveryStatus($message['ID'],$message['STATUS']);
-            $model->unsetData();
-        }
-        
-        
-    }
+
     
 
 }

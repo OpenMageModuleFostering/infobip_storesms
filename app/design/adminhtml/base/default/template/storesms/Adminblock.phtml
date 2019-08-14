@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        var $j = jQuery.noConflict();
+
+        function ClearFields() {
+            document.getElementById("storesms_grid_filter_message_id").value = "";
+            document.getElementById("storesms_grid_filter_to").value = "";
+            document.getElementById("storesms_grid_filter_from").value = "";
+            document.getElementById("storesms_grid_filter_text").value = "";
+            document.getElementById("storesms_grid_filter_status").value = "";
+
+            var $rows = $j('#storesms_grid_table tbody tr');
+            $rows.show();
+        }
+
+        window.onload = function FilterSearch() {
+
+            (function($j) {
+                $j.fn.multiFilter = function(filters) {
+                    var $table = $j(this);
+                    return $table.find('tbody > tr').each(function() {
+                        var tr = $j(this);
+
+                        // Make it an array to avoid special cases later.
+                        if(!$j.isArray(filters))
+                            filters = [ filters ];
+
+                        howMany = 0;
+                        for(i = 0, f = filters[0]; i < filters.length; f = filters[++i]) {
+                            var index = 0;
+                            $table.find('thead > tr > th').each(function(i) {
+                                if($j(this).text() == f.column) {
+                                    index = i;
+                                    return false;
+                                }
+                            });
+                            var text = tr.find('td:eq(' + index + ')').text();
+                            if(text.toLowerCase().indexOf(f.word.toLowerCase()) != -1)
+                                ++howMany;
+                        }
+                        if(howMany == filters.length)
+                            tr.show();
+                        else
+                            tr.hide();
+                    });
+                };
+            })(jQuery);
+
+            $j('#storesms_grid_filter_message_id').keyup(function() {
+                var t = $j('table');
+                $j('#storesms_grid_table').multiFilter([
+                    { column: 'Message ID',  word: this.value },
+                    { column: 'To',  word: $j('#storesms_grid_filter_to').val() },
+                    { column: 'From',  word: $j('#storesms_grid_filter_from').val() },
+                    { column: 'Text',  word: $j('#storesms_grid_filter_text').val() },
+                    { column: 'General Status',word: $j('#storesms_grid_filter_status').val() }
+                ]);
+            });
+
+            $j('#storesms_grid_filter_to').keyup(function() {
+                var t = $j('table');
+                $j('#storesms_grid_table').multiFilter([
+                    { column: 'Message ID',  word: $j('#storesms_grid_filter_message_id').val() },
+                    { column: 'To',  word: this.value },
+                    { column: 'From',  word: $j('#storesms_grid_filter_from').val() },
+                    { column: 'Text',  word: $j('#storesms_grid_filter_text').val() },
+                    { column: 'General Status',word: $j('#storesms_grid_filter_status').val() }
+                ]);
+            });
+
+            $j('#storesms_grid_filter_from').keyup(function() {
+                var t = $j('table');
+                $j('#storesms_grid_table').multiFilter([
+                    { column: 'Message ID',  word: $j('#storesms_grid_filter_message_id').val() },
+                    { column: 'To',  word: $j('#storesms_grid_filter_to').val() },
+                    { column: 'From',  word: this.value },
+                    { column: 'Text',  word: $j('#storesms_grid_filter_text').val() },
+                    { column: 'General Status',word: $j('#storesms_grid_filter_status').val() }
+                ]);
+            });
+
+            $j('#storesms_grid_filter_text').keyup(function() {
+                var t = $j('table');
+                $j('#storesms_grid_table').multiFilter([
+                    { column: 'Message ID',  word: $j('#storesms_grid_filter_message_id').val() },
+                    { column: 'To',  word: $j('#storesms_grid_filter_to').val() },
+                    { column: 'From',  word: $j('#storesms_grid_filter_from').val() },
+                    { column: 'Text',  word: this.value },
+                    { column: 'General Status',word: $j('#storesms_grid_filter_status').val() }
+                ]);
+            });
+
+            $j('#storesms_grid_filter_status').change(function() {
+                var t = $j('table');
+                $j('#storesms_grid_table').multiFilter([
+                    { column: 'Message ID',  word: $j('#storesms_grid_filter_message_id').val() },
+                    { column: 'To',  word: $j('#storesms_grid_filter_to').val() },
+                    { column: 'From',  word: $j('#storesms_grid_filter_from').val() },
+                    { column: 'Text',  word: $j('#storesms_grid_filter_text').val() },
+                    { column: 'General Status',word: this.value }
+                ]);
+            });
+
+        }
+    </script>
+</head>
+<body>
+<div id="storesms_grid">
+    <table cellspacing="0" class="actions">
+        <tbody>
+        <tr>
+            <td class="filter-actions a-right">
+                <button id="id_reset" title="Reset Filter" type="button" class="scalable " onclick="ClearFields()" style=""><span>Reset Filter</span></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="grid">
+        <div class="hor-scroll">
+            <table cellspacing="0" class="data" id="storesms_grid_table">
+                <colgroup><col width="50">
+                    <col width="50">
+                    <col width="50">
+                    <col width="250">
+                    <col width="50">
+                    <col width="50">
+                    <col width="150">
+                </colgroup><thead>
+                <tr class="headings">
+                    <th>Message ID</th>
+                    <th>To</th>
+                    <th>From</th>
+                    <th>Text</th>
+                    <th>General Status</th>
+                    <th>Status Description</th>
+                    <th>Sent At</th>
+                </tr>
+                <tr class="filter">
+                    <th><div class="field-100"><input type="text" name="message_id" id="storesms_grid_filter_message_id" value="" class="input-text no-changes"></div></th>
+                    <th><div class="field-100"><input type="text" name="to" id="storesms_grid_filter_to" value="" class="input-text no-changes"></div></th>
+                    <th><div class="field-100"><input type="text" name="from" id="storesms_grid_filter_from" value="" class="input-text no-changes"></div></th>
+                    <th><div class="field-100"><input type="text" name="text" id="storesms_grid_filter_text" value="" class="input-text no-changes"></div></th>
+                    <th><select id="storesms_grid_filter_status" name="general status">
+                            <option value=""></option>
+                            <?php
+                            // distinct result
+                            $arrayOfMessageLogs = Mage::helper('storesms')->getLogs();
+                            foreach ($arrayOfMessageLogs as $sentMessageLog) {
+                                $generalStatuses[] = $sentMessageLog["general_status"];
+
+                            }
+                            $uniqueGeneralStatuses = array_unique($generalStatuses);
+                            foreach ($uniqueGeneralStatuses as $genStat) {
+                                echo "<option value=\"". $genStat ."\">". $genStat ."</option>";
+                            }
+                            ?>
+                        </select></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                <?php
+
+                foreach ($arrayOfMessageLogs as $sentMessageLog) {
+                    ?>
+                    <tr title="#" class="pointer">
+                        <td class="a-left ">
+                            <?php echo $sentMessageLog["message_id"]; ?>
+                        </td>
+                        <td id="col_to" class="a-left ">
+                            <?php echo $sentMessageLog["to"]; ?>
+                        </td>
+                        <td id="col_from" class="a-left ">
+                            <?php echo $sentMessageLog["from"]; ?>
+                        </td>
+                        <td class="a-left ">
+                            <?php echo $sentMessageLog["text"]; ?>
+                        </td>
+                        <td class="a-left ">
+                            <?php echo $sentMessageLog["general_status"]; ?>
+                        </td>
+                        <td class="a-left last ">
+                            <?php echo $sentMessageLog["status_description"]; ?>
+                        </td>
+                        <td class="a-left ">
+                            <?php echo $sentMessageLog["sent_at"]; ?>
+                        </td>
+                    </tr>
+                    <?php
+
+                } ?>
+
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

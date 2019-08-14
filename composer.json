@@ -3,11 +3,13 @@
     "type": "magento-module",
     "license": "Infobip-StoreSMS-licence",
     "homepage": "",
-    "description": "By using Infobip StoreSMS you can easily keep your customers informed about the status of their shipments. If your business sells or makes products that need shipping, Infobip StoreSMS is the right solution for you.",
+    "description": "By using Infobip StoreSMS you can easily keep your customers informed about the status of their shipments.
+        If your business sells or makes products that need shipping, Infobip StoreSMS is the right solution for you.
+    ",
     "authors": [
     {
-        "name": "Snowdog",
-        "email": "support@snowdog.pl"
+        "name": "Infobip",
+        "email": "magento@infobip.com"
     }
 ],
     "suggest": {

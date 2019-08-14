@@ -45,9 +45,10 @@ class Infobip_Storesms_Model_Observer {
         if ($config->isApiEnabled()==0) return;
         
         try {
-            $credits = Mage::getModel('storesms/apiClient')->getCredits();
+            $creditsXML = Mage::getModel('storesms/apiClient')->getCredits();
+            $ExceptionMessage = $creditsXML->requestError->serviceException->messageId;
 
-            if ($credits=='UNKNOWN_COMMAND') {
+            if ($ExceptionMessage=='UNAUTHORIZED') {
                 throw new Exception(Mage::helper('storesms')->__($config::WRONG_AUTH_DATA));
             }
             else {
@@ -76,7 +77,6 @@ class Infobip_Storesms_Model_Observer {
             $newStatus =  $order->getData('status');
             $origStatus =  $order->getOrigData('status');
 
-
             if (time()-self::$lastExecutionTime<=2)
                 return;
 
@@ -89,7 +89,6 @@ class Infobip_Storesms_Model_Observer {
                 if (!$message)  //return if no active message template
                 return;
 
-
                 //getting last tracking number
                 $tracking = Mage::getResourceModel('sales/order_shipment_track_collection')->setOrderFilter($order)->getData();
 
@@ -99,7 +98,6 @@ class Infobip_Storesms_Model_Observer {
                 }
                 else
                     $last_tracking_number = 'no_tracking'; //if no tracking number set "no_tracking" message for {TRACKINGNUMBER} template
-
 
                 //getting order data to generate message template
                 $messageOrderData['{NAME}'] = $order->getShippingAddress()->getData('firstname');
@@ -113,42 +111,26 @@ class Infobip_Storesms_Model_Observer {
                 //prepare sms content
                 $msg['recipients'][]    = Mage::helper('storesms')->getPhoneNumber($order->getShippingAddress()->getData('telephone')); //or getBillingAddress
                 $msg['message']         = $message;
-                $msg['single_message']  = $config->isSingle(); //allow_long_sms
                 $msg['sender']          = $config->getSender();//sender
-
 
                 //sending sms and getting API response
 
                 try {
 
                     $apiClient = Mage::getModel('storesms/apiClient');
-                    $model = Mage::getModel('storesms/storesms');
-                    $savedIds = $model->saveMessages($msg);
-                    $msg['ids'] = $savedIds;
                     $response = $apiClient->sendByCurl($msg);
-                    if ($response===false)
-                    {
+                    $responseBodyXml = $response["responseBodyXml"];
+                    $httpStatusCode = $response["httpStatusCode"];
+                    $msgId = $responseBodyXml -> messages -> message -> messageId;
 
-                        //save delievery status for each message
-                        foreach ($msg['ids'] as $messageId) {
-                            $model->setNewDeliveryStatus($messageId,'API CONNECTION ERROR.');
-                            $model->unsetData();
-                            Mage::throwException('API CONNECTION ERROR.');
-                        }
-
-                    }
-                    else {
-
-                        $responseVerbally = Mage::helper('storesms')->getStatusVerbally(Mage::helper('storesms/xml')->getStatusCode($response));
-                        if ($responseVerbally!='SEND_OK')
-                            Mage::throwException(Mage::helper('storesms')->__('Error sending Message:').' '.$responseVerbally);
-                        //@successs add comment to order
-                        $newComment = Mage::helper('storesms')->__('SMS notification sent (SMS id:').$msg['ids'][$msg['recipients'][0]].') ' ;
-                        $history->setComment($newComment);
-                        //Mage::getSingleton('core/session')->addSuccess($newComment);
-                        $this->checkCreditLimit();
-                    }
-
+                    $responseVerbally = Mage::helper('storesms')->getStatusVerbally($httpStatusCode);
+                    if ($responseVerbally!='OK')
+                        Mage::throwException(Mage::helper('storesms')->__('Error sending Message:').' '.$responseVerbally);
+                    //@successs add comment to order
+                    $newComment = Mage::helper('storesms')->__('SMS notification sent (SMS id:').$msgId.') ' ;
+                    $history->setComment($newComment);
+                    //Mage::getSingleton('core/session')->addSuccess($newComment);
+                    $this->checkCreditLimit();
 
                 } catch (Exception $e) {
                     $newComment = Mage::helper('storesms')->__('SMS notification sending error:').' "'.$e->getMessage().'"';

@@ -17,8 +17,9 @@
 class Infobip_Storesms_Model_Config {
     
     const LOW_CREDITS_WARNING_MESSAGE = 'Warning: Low credit level at your Storesms account. Buy credits.';
-    const API_HOST = 'api2.infobip.com';
+    const API_HOST = 'api.infobip.com';
     const WRONG_AUTH_DATA = 'Storesms API: Wrong Password and/or Username' ;
+    const DR_LIMIT = 7654;
     
     public $contacts = array (
         'en_US'=>'http://www.infobip.com/contact', //default international
@@ -75,24 +76,6 @@ class Infobip_Storesms_Model_Config {
         return Mage::getStoreConfig('storesms/main_conf/sender_active');
     }
 
-    
-     /**
-     * Checks if allowed only single message
-     * @return int
-     */ 
-    public function isSingle() {
-        $confRule = Mage::getStoreConfig('storesms/main_conf/allow_long_sms');
-        
-        return ($confRule == 1) ? 0:1;
-        
-    }
-
-    public function isUnicode() {
-        $confRule = Mage::getStoreConfig('storesms/main_conf/allow_unicode_sms');
-        
-        return ($confRule == 1) ? 0:1;
-        
-    }
 
     
     public function getCountryPrefix() {
@@ -140,29 +123,7 @@ class Infobip_Storesms_Model_Config {
         
     }
     
-    
-    
-   public function getMessageStatuses() {
-       $statuses = array(   'SEND_OK'       =>'SEND_OK',
-                            'AUTH_FAILED'   =>'AUTH_FAILED',
-                            'XML_ERROR'     =>'XML_ERROR',
-                            'NOT_ENOUGH_CREDITS'    =>'NOT_ENOUGH_CREDITS',
-                            'NO_RECIPIENTS' =>'NO_RECIPIENTS',
-                            'GENERAL_ERROR' =>'GENERAL_ERROR',
-                            'WAITING_FOR_DR' =>'WAITING_FOR_DR',
-                            'NOT_SENT'=>'NOT_SENT',
-                            'SENT'=>'SENT',
-                            'NOT_DELIVERED'=>'NOT_DELIVERED',
-                            'DELIVERED'=>'DELIVERED',
-                            'NOT_ALLOWED'=>'NOT_ALLOWED',
-                            'INVALID_DESTINATION_ADDRESS'=>'INVALID_DESTINATION_ADDRESS',
-                            'INVALID_SOURCE_ADDRESS'=>'INVALID_SOURCE_ADDRESS',
-                            'ROUTE_NOT_AVAILABLE'=>'ROUTE_NOT_AVAILABLE',
-                            'NOT_ENOUGH_CREDITS'=>'NOT_ENOUGH_CREDITS',
-                            'INVALID_MESSAGE_FORMAT'=>'INVALID_MESSAGE_FORMAT');
-       
-       return $statuses;
-   }
+
     
     
 }
