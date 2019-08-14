@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Infobip Storesms API
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * Short Message Service (SMS) API
+ *
+ * @category   Infobip
+ * @package    storesms API
+ * @copyright  Copyright (c) 2012 Infobip (http://infobip.pl/)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Marek Jasiukiewicz <dev@jasiukiewicz.pl>
+*/
+
+-->
+
+<config>
+  <tabs>
+      <infobip translate="label">
+          <label>INFOBIP</label>
+          <sort_order>1</sort_order>
+      </infobip>
+  </tabs>
+  <sections>
+    <storesms translate="label" module="storesms">
+      <label><![CDATA[<span class="infobipadmin-menu">Infobip StoreSMS</span>]]></label>
+      <tab>infobip</tab>
+      <frontend_type>text</frontend_type>
+      <sort_order>0</sort_order>
+      <show_in_default>1</show_in_default>
+      <show_in_website>1</show_in_website>
+      <show_in_store>1</show_in_store>
+        <groups>
+            <branding_header translate="label" module="storesms">
+                <frontend_model>storesms/adminhtml_system_config_fieldset_branding</frontend_model>
+                <sort_order>0</sort_order>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>1</show_in_store>
+            </branding_header>
+            <main_conf translate="label">
+                <label>Storesms - Main Configuration</label>
+                <frontend_type>text</frontend_type>
+                <sort_order>1</sort_order>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>1</show_in_store>
+                <expanded>1</expanded>
+                <fields>
+                    <active translate="label">
+                        <label>Enabled</label>
+                        <frontend_type>select</frontend_type>
+                        <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sort_order>1</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                    </active>
+
+                   <apilogin translate="label">
+                        <label>API Login</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>2</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                   </apilogin>
+
+                   <apipassword translate="label">
+                        <label>API Password</label>
+                        <frontend_type>obscure</frontend_type>
+                        <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                        <sort_order>3</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                   </apipassword>
+
+                   <storename translate="label">
+                        <label>Store name</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>4</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                   </storename>
+                   
+                   
+                    <sender_active translate="label">
+                         <label>Send as Pro Message (with sender)</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>5</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </sender_active>
+                   <sender translate="label">
+                        <label>Sender (max. 11 chars)</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>6</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <validate>validate-length maximum-length-11</validate>
+                        <depends><sender_active>1</sender_active></depends>
+                   </sender>
+                   
+                   <country_prefix translate="label">
+                        <label>Country prefix</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>20</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <validate>validate-length maximum-length-5</validate>
+                   </country_prefix>
+                   
+                   <allow_long_sms translate="label">
+                        <label>Allow long messages (more than 160 chars)</label>
+                        <frontend_type>select</frontend_type>
+                        <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sort_order>25</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                   </allow_long_sms>
+                   
+                   <credit_alert_limit translate="label comment">
+                        <label>Notify if my Storesms account credits is below:</label>
+                        <comment>0 - turn off/no alert</comment>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>30</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <validate>validate-zero-or-greater</validate>
+                   </credit_alert_limit>
+                   
+                </fields>
+
+            </main_conf>
+
+
+
+                <templates translate="label comment" module="storesms">
+                 <label>Message templates</label>
+                 <frontend_type>text</frontend_type>
+                 <comment><![CDATA[<div style="padding:10px;background-color:#fff;border:1px solid #CCC;margin-bottom:7px;">In each template you can use dynamic data. You can add <br />- {NAME} - customer name <br />- {ORDERSTATUS} - status of an order <br />- {ORDERNUMBER} - order number<br />- {TRACKINGNUMBER} - tracking number (if exists)<br />- {STORENAME} - the name of the store<br />Example: Your order #{ORDERNUMBER} waits for a fee. Regards {STORENAME}<br />SMS Content: Your order #100000012 waits for a fee. Regards infobip.com</div><div id="storesmsCounterContainer">Message length: <span id="storesmsCounter">0</span> chars.<br /> <span id="storesmsTooLongAlert"> Warning: The template can be to long for 1 SMS. Please shorten the message or allow to send long messages in Main Configuration.</span></div><br />]]></comment>
+                 <sort_order>100</sort_order>
+                 <show_in_default>1</show_in_default>
+                 <show_in_website>1</show_in_website>
+                 <show_in_store>1</show_in_store>
+                 <expanded>1</expanded>
+                 <fields>
+
+                    <status_pending_payment_active translate="label">
+                         <label>Send SMS after status changed to "Pending Payment"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>3</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_pending_payment_active>
+                    <status_pending_payment translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>4</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_pending_payment_active>1</status_pending_payment_active></depends>
+                    </status_pending_payment>
+
+                    <status_holded_active translate="label">
+                         <label>Send SMS after status changed to "On Hold"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>5</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_holded_active>
+                    <status_holded translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>6</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_holded_active>1</status_holded_active></depends>
+                    </status_holded>                   
+
+                    <status_processing_active translate="label">
+                         <label>Send SMS after status changed to "Processing"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>7</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_processing_active>
+                    <status_processing translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>8</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_processing_active>1</status_processing_active></depends>
+                    </status_processing>
+
+                    <status_canceled_active translate="label">
+                         <label>Send SMS after status changed to "Canceled"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>9</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_canceled_active>
+                    <status_canceled translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>10</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_canceled_active>1</status_canceled_active></depends>
+                    </status_canceled>
+
+                    <status_complete_active translate="label">
+                         <label>Send SMS after status changed to "Complete"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>11</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_complete_active>
+                    <status_complete translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>12</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_complete_active>1</status_complete_active></depends>
+                    </status_complete>
+
+                    <status_closed_active translate="label">
+                         <label>Send SMS after status changed to "Closed"</label>
+                         <frontend_type>select</frontend_type>
+                         <source_model>adminhtml/system_config_source_yesno</source_model>
+                         <sort_order>13</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                    </status_closed_active>
+                    <status_closed translate="label">
+                         <label>Template</label>
+                         <frontend_type>textarea</frontend_type>
+                         <sort_order>14</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                         <depends><status_closed_active>1</status_closed_active></depends>
+                    </status_closed>
+                 </fields>
+             </templates>
+
+             <contact translate="label"  module="storesms">
+                 <label>Contact Us</label>
+                 <frontend_type>text</frontend_type>
+                 <sort_order>200</sort_order>
+                 <show_in_default>1</show_in_default>
+                 <show_in_website>1</show_in_website>
+                 <show_in_store>1</show_in_store>
+                 <fields>
+                     <contactbutton translate="label">
+                         <label>Contact Us</label>
+                         <frontend_model>storesms/buttons_contact</frontend_model>
+                         <sort_order>101</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                     </contactbutton>
+                 </fields>
+             </contact>
+             
+             <newaccount translate="label comment"  module="storesms">
+                 <label>Sign up</label>
+                 <comment><![CDATA[<p><strong>How to register and start using the Plugin?</strong><br /><br />Because Parseco provides Infobip's API integration, in order to use Infobip StoreSMS it is necessary to register over the Parseco platform (<a href="http://www.parseco.com/" target="_blank">www.parseco.com</a>). This allows you to get your login credentials and password for the plugin.</p>]]></comment>
+                 <frontend_type>text</frontend_type>
+                 <sort_order>210</sort_order>
+                 <show_in_default>1</show_in_default>
+                 <show_in_website>1</show_in_website>
+                 <show_in_store>1</show_in_store>
+                 <fields>
+                     <newaccountbutton translate="label">
+                         <label>Sign up</label>
+                         <frontend_model>storesms/buttons_newAccount</frontend_model>
+                         <sort_order>101</sort_order>
+                         <show_in_default>1</show_in_default>
+                         <show_in_website>1</show_in_website>
+                         <show_in_store>1</show_in_store>
+                     </newaccountbutton>
+                 </fields>
+             </newaccount>
+        </groups>
+    </storesms>
+  </sections>
+</config>

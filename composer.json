@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Infobip_Storesms",
+    "type": "magento-module",
+    "license": "Infobip-StoreSMS-licence",
+    "homepage": "",
+    "description": "Infobip StoreSMS API module",
+    "authors": [
+    {
+        "name": "Snowdog",
+        "email": "support@snowdog.pl"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

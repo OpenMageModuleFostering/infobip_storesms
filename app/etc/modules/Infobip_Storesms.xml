@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Infobip_Storesms>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Infobip_Storesms>
+    </modules>
+</config>

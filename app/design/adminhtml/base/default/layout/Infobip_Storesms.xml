@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>infobipStoresms/storesmscounter.js</script></action>
+            <action method="addCss"><name>css/storesms/skin.css</name></action>
+        </reference>
+    </default>
+    <adminhtml_storesms_index>
+        <reference name="content">
+            <block type="storesms/adminhtml_storesms" name="storesms" />
+        </reference>
+    </adminhtml_storesms_index>
+    
+        <storesms_adminhtml_storesms_index>
+        <reference name="content">
+            <block type="storesms/adminhtml_storesms" name="storesms" />
+        </reference>
+    </storesms_adminhtml_storesms_index>
+</layout>

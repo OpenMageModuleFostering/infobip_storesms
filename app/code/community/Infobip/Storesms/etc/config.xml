@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    File:  app/code/community/Infobip/Storesms/etc/config.xml
+
+    /**
+     * Infobip Storesms API Module
+     *
+     * NOTICE OF LICENSE
+     *
+     * This source file is subject to the Open Software License (OSL 3.0)
+     * that is bundled with this package in the file LICENSE.txt.
+     * It is also available through the world-wide-web at this URL:
+     * http://opensource.org/licenses/osl-3.0.php
+     * If you did not receive a copy of the license and are unable to
+     * obtain it through the world-wide-web, please send an email
+     * to license@magentocommerce.com so we can send you a copy immediately.
+     *
+     * DISCLAIMER
+     *
+     * Do not edit or add to this file if you wish to upgrade Magento to newer
+     * versions in the future. If you wish to customize Magento for your
+     * needs please refer to http://www.magentocommerce.com for more information.
+     *
+     * Short Message Service (SMS) API
+     *
+     * @category   Infobip
+     * @package    StoreSMS
+     * @copyright  Copyright (c) 2012 Infobip (http://infobip.com/)
+     * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+     * @author     Marek Jasiukiewicz <dev@jasiukiewicz.pl>
+*/
+
+-->
+<config>
+
+    <modules>
+        <Infobip_Storesms>
+            <version>1.0.0</version>
+        </Infobip_Storesms>
+    </modules>
+    
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <storesms before="Mage_Adminhtml">Infobip_Storesms_Adminhtml</storesms>
+                    </modules>
+                </args>
+            </adminhtml>
+            <storesms>
+                <use>admin</use>
+                <args>
+                    <module>Infobip_Storesms</module>
+                    <frontName>storesms</frontName>
+                </args>
+            </storesms>
+        </routers>
+    </admin>
+
+
+   <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <storesms>
+                                            <title>Infobip StoreSMS</title>
+                                            <sort_order>101</sort_order>
+                                        </storesms>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                        <storesms>
+                            <title>Infobip StoreSMS</title>
+                            <children>
+                                <storesms translate="title" module="storesms">
+                                    <title>StoreSMS - SMS summary</title>
+                                </storesms>
+                                <manual translate="title" module="storesms">
+                                        <title>StoreSMS - Send Bulk SMS</title>
+                                        <sort_order>10</sort_order>
+                                </manual>
+                            </children>
+                        </storesms>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <menu>
+			<storesms translate="title" module="storesms">
+				<title>Infobip StoreSMS</title>
+				<sort_order>500</sort_order>               
+				<children>
+                    <smssummary translate="title" module="storesms">
+                        <title>StoreSMS - Summary</title>
+                        <sort_order>5</sort_order>
+                        <action>adminhtml/storesms/index</action>
+                    </smssummary>
+                    <manual translate="title" module="storesms">
+                        <title>StoreSMS - Send Bulk SMS</title>
+                        <sort_order>10</sort_order>
+                        <action>storesms/adminhtml_storesms/new</action>
+                    </manual>
+					<settings translate="title" module="storesms">
+						<title>StoreSMS - Settings</title>
+						<sort_order>15</sort_order>
+						<action>adminhtml/system_config/edit/section/storesms</action>
+					</settings>
+				</children>
+			</storesms>
+       </menu>
+        
+        <layout>
+            <updates>
+                <storesms>
+                    <file>Infobip_Storesms.xml</file>
+                </storesms>
+            </updates>
+        </layout>
+      
+        <translate>
+            <modules>
+                <Infobip_Storesms>
+                    <files>
+                        <default>Infobip_Storesms.csv</default>
+                    </files>
+                </Infobip_Storesms>
+            </modules>
+        </translate>
+
+        <events>
+            <admin_system_config_changed_section_storesms>
+                <observers>
+                    <storesms_check_authorization_data>
+                        <class>Infobip_Storesms_Model_Observer</class>
+                        <method>checkAuthorizationData</method>
+                    </storesms_check_authorization_data>
+                </observers>
+            </admin_system_config_changed_section_storesms>
+            <admin_session_user_login_success>
+                <observers>
+                    <storesms_check_limits>
+                        <class>Infobip_Storesms_Model_Observer</class>
+                        <method>checkCreditLimit</method>
+                    </storesms_check_limits>
+                </observers>
+            </admin_session_user_login_success>
+        </events>
+
+
+    </adminhtml>
+
+
+    <global>
+        <models>
+            <storesms>
+                <class>Infobip_Storesms_Model</class>
+                <resourceModel>storesms_resource</resourceModel>
+            </storesms>
+             <storesms_resource>
+                <class>Infobip_Storesms_Model_Resource</class>
+                <entities>
+                    <infobip_storesms>
+                        <table>infobip_storesms</table>
+                    </infobip_storesms>
+                </entities>
+            </storesms_resource>
+        </models>
+        <helpers>
+            <storesms>
+                <class>Infobip_Storesms_Helper</class>
+            </storesms>
+        </helpers>
+        <blocks>
+            <storesms>
+                <class>Infobip_Storesms_Block</class>
+            </storesms>
+        </blocks>
+        <resources>
+            <storesms_setup>
+                <setup>
+                    <module>Infobip_Storesms</module>
+                </setup>
+            </storesms_setup>            
+        </resources>
+        <events>        
+            <sales_order_save_before>
+                <observers>
+                    <order_new_status>
+                        <class>Infobip_Storesms_Model_Observer</class>
+                        <method>handleStatus</method>
+                    </order_new_status>
+                </observers>
+            </sales_order_save_before>
+        </events>
+    </global>   
+    
+    <default>
+        <storesms>
+            <main_conf>                
+                <credit_alert_limit>0</credit_alert_limit>         
+            </main_conf>
+        </storesms>
+    </default>
+    
+    <crontab>
+        <jobs>
+            <storesms_getreports>
+                <schedule>
+                    <cron_expr>0,30 * * * *</cron_expr>
+                </schedule>
+                <run><model>storesms/cron::getDelieveryReport</model></run>
+            </storesms_getreports>
+        </jobs>
+    </crontab>
+     
+    
+</config>
