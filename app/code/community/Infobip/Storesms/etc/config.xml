@@ -35,7 +35,7 @@
 
     <modules>
         <Infobip_Storesms>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </Infobip_Storesms>
     </modules>
     
@@ -190,15 +190,15 @@
                 </setup>
             </storesms_setup>            
         </resources>
-        <events>        
-            <sales_order_save_before>
+        <events>
+            <sales_order_status_history_save_before>
                 <observers>
                     <order_new_status>
                         <class>Infobip_Storesms_Model_Observer</class>
-                        <method>handleStatus</method>
+                        <method>orderStatusHistorySave</method>
                     </order_new_status>
                 </observers>
-            </sales_order_save_before>
+            </sales_order_status_history_save_before>
         </events>
     </global>   
     

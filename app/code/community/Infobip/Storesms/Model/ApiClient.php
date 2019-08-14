@@ -17,7 +17,6 @@ class Infobip_Storesms_Model_ApiClient {
   
     public function sendByCurl(array $smsData) {
         
-        
         if (empty($smsData['recipients']))
             throw new Exception(Mage::helper('storesms')->__('No recipients found'));
         
@@ -55,16 +54,20 @@ class Infobip_Storesms_Model_ApiClient {
         $fields = "XML=" . urlencode($xmlString);
         
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_URL, $postUrl);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,TRUE);
+        curl_setopt($ch, CURLOPT_MAXREDIRS,2);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-        
+
+
         // response of the POST request
         $response = curl_exec($ch);
         curl_close($ch);
-        
         return $response;        
     }
     
@@ -91,6 +94,9 @@ class Infobip_Storesms_Model_ApiClient {
     
     
     public function checkCreditLimit() {
+
+        if (!Mage::getSingleton('admin/session')->isLoggedIn()) //checks credit limit only for logged admin
+            return;
         
         $config =   Mage::getModel('storesms/config');
         if ($config->isApiEnabled()==0) return;

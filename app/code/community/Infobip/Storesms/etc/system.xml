@@ -170,7 +170,7 @@
                  <expanded>1</expanded>
                  <fields>
 
-                    <status_pending_payment_active translate="label">
+                    <status_pending_active translate="label">
                          <label>Send SMS after status changed to "Pending Payment"</label>
                          <frontend_type>select</frontend_type>
                          <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -178,16 +178,16 @@
                          <show_in_default>1</show_in_default>
                          <show_in_website>1</show_in_website>
                          <show_in_store>1</show_in_store>
-                    </status_pending_payment_active>
-                    <status_pending_payment translate="label">
+                    </status_pending_active>
+                    <status_pending translate="label">
                          <label>Template</label>
                          <frontend_type>textarea</frontend_type>
                          <sort_order>4</sort_order>
                          <show_in_default>1</show_in_default>
                          <show_in_website>1</show_in_website>
                          <show_in_store>1</show_in_store>
-                         <depends><status_pending_payment_active>1</status_pending_payment_active></depends>
-                    </status_pending_payment>
+                         <depends><status_pending_active>1</status_pending_active></depends>
+                    </status_pending>
 
                     <status_holded_active translate="label">
                          <label>Send SMS after status changed to "On Hold"</label>
