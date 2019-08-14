@@ -87,6 +87,13 @@ class Infobip_Storesms_Model_Config {
         
     }
 
+    public function isUnicode() {
+        $confRule = Mage::getStoreConfig('storesms/main_conf/allow_unicode_sms');
+        
+        return ($confRule == 1) ? 0:1;
+        
+    }
+
     
     public function getCountryPrefix() {
         

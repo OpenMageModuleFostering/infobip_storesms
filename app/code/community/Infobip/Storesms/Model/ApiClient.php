@@ -26,6 +26,7 @@ class Infobip_Storesms_Model_ApiClient {
         // XML-formatted data
         
         $xmlLongSms = ($config->isSingle()==1) ? '':'<type>longSMS</type>';
+	$dataCoding = ($config->isUnicode()==1) ? '0':'8';
         $sender = $config->getSender();
         $xmlSender  = ($config->isPro() && !empty($sender)) ? '<sender>'.$config->getSender().'</sender>':'';    
 
@@ -46,6 +47,7 @@ class Infobip_Storesms_Model_ApiClient {
 '.$xmlSender.'
 '.$xmlLongSms.'
 <text>'.$smsData['message'].'</text>
+<datacoding>'.$dataCoding.'</datacoding>
 </message>
 '.$xmlRecipients.'
 </SMS>';

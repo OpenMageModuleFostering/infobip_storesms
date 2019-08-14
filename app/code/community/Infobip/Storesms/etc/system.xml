@@ -133,7 +133,7 @@
                    </country_prefix>
                    
                    <allow_long_sms translate="label">
-                        <label>Allow long messages (more than 160 chars)</label>
+                        <label>Allow long messages (more than 160 chars or 70 for unicode)</label>
                         <frontend_type>select</frontend_type>
                         <source_model>adminhtml/system_config_source_yesno</source_model>
                         <sort_order>25</sort_order>
@@ -141,6 +141,16 @@
                         <show_in_website>1</show_in_website>
                         <show_in_store>1</show_in_store>
                    </allow_long_sms>
+		
+                    <allow_unicode_sms translate="label">
+                        <label>Send as unicode message (70 characters)</label>
+                        <frontend_type>select</frontend_type>
+                        <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <sort_order>27</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                    </allow_unicode_sms>
                    
                    <credit_alert_limit translate="label comment">
                         <label>Notify if my Storesms account credits is below:</label>
