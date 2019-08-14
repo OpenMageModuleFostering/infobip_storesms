@@ -10,7 +10,7 @@ class Infobip_Storesms_Block_Buttons_NewAccount extends Mage_Adminhtml_Block_Sys
                     ->setType('button')
                     ->setClass('button')
                     ->setLabel(Mage::helper('storesms')->__('Open Sign Up form'))
-                    ->setOnClick("window.open('http://www.parseco.com/sign-up/','window1','width=990, height=705, scrollbars=1, resizable=1'); return false;")
+                    ->setOnClick("window.open('https://accounts.infobip.com/signup','window1','width=990, height=705, scrollbars=1, resizable=1'); return false;")
                     ->toHtml();
 
         return $html;
