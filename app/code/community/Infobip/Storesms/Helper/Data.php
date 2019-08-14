@@ -1,28 +1,28 @@
 <?php
 
 class Infobip_Storesms_Helper_Data extends Mage_Core_Helper_Abstract
-{    
-       
-    
-    
+{
+
+
+
     public function  getPhoneNumber($phoneNumber) {
-        
+
         $config = Mage::getModel('storesms/config');
         $prefix = $config->getCountryPrefix();
-        
+        $toStrip = '+,0()';
+
         if ($prefix) {
-            $toStrip = '+,'. $prefix .',0';
+            $pos = strpos($phoneNumber, $prefix);
+            if ($pos !== false && $pos <= 1) {
+                $phoneNumber = substr_replace($phoneNumber, '', $pos, strlen($prefix));
+            }
         }
-        else {
-            $toStrip = '+,0';
-        }
-        
-        
+
         return $prefix . ltrim($phoneNumber,$toStrip);
 
     }
-    
-    
+
+
     public function getStatusVerbally($httpStatusCode) {
 
         $httpStatusCode = ($httpStatusCode>=200 && $httpStatusCode<300) ? 200:$httpStatusCode;
@@ -40,9 +40,9 @@ class Infobip_Storesms_Helper_Data extends Mage_Core_Helper_Abstract
             '404'     =>'NOT_FOUND',
             '500'     =>'SERVER_ERROR'
         );
-        
+
         return $httpStatusesVerbal[$httpStatusCode];
-        
+
     }
 
     public function getLogs() {
@@ -67,5 +67,5 @@ class Infobip_Storesms_Helper_Data extends Mage_Core_Helper_Abstract
         return $arrayOfMessageLogs;
 
     }
-    
+
 }

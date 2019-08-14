@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Infobip_Storesms</name>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <stability>stable</stability>
     <license>Infobip StoreSMS licence</license>
     <channel>community</channel>
@@ -68,7 +68,7 @@
                         </dir>
                     </dir>
                     <dir name="Helper">
-                        <file name="Data.php" hash="974435258dcd08cb4ed793cee02f1788"/>
+                        <file name="Data.php" hash="004a36f801bde90fe9c10d7fcc49e0cf"/>
                     </dir>
                     <dir name="Model">
                         <file name="ApiClient.php" hash="1fdd7b2aa0cfdcdb5b44a52d269fe645"/>
@@ -83,7 +83,7 @@
                     </dir>
                     <dir name="etc">
                         <file name="config.xml" hash="8e03f00ace819c36402311e36edb424f"/>
-                        <file name="system.xml" hash="408a282448b07035a433250dbbbea988"/>
+                        <file name="system.xml" hash="306dea3d0a32e1f961d753195f64e820"/>
                     </dir>
                 </dir>
             </dir>

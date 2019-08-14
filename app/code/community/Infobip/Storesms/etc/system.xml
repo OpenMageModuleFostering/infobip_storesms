@@ -297,7 +297,7 @@
              
              <newaccount translate="label comment"  module="storesms">
                  <label>Sign up</label>
-                 <comment><![CDATA[<p><strong>How to register and start using the Plugin?</strong><br /><br />Because Parseco provides Infobip's API integration, in order to use Infobip StoreSMS it is necessary to register over the Parseco platform (<a href="http://www.parseco.com/" target="_blank">www.parseco.com</a>). This allows you to get your login credentials and password for the plugin.</p>]]></comment>
+                 <comment><![CDATA[<p><strong>How to register and start using the Plugin?</strong><br /><br />In order to use Infobip StoreSMS it is necessary to register on the Infobip platform (<a href="http://www.infobip.com/en/contact" target="_blank">http://www.infobip.com</a>). This allows you to get your login credentials and password for the plugin.</p>]]></comment>
                  <frontend_type>text</frontend_type>
                  <sort_order>210</sort_order>
                  <show_in_default>1</show_in_default>
